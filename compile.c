@@ -51,7 +51,7 @@ int main() {
     }
 
     // now we know who is the max and who is the min
-    printf("max: %ld, min: %ld\n", maxCase, minCase);
+    // printf("max: %ld, min: %ld\n", maxCase, minCase);
     int casesArrSize = maxCase - minCase + 2;
     char cases[casesArrSize];
     int i = 0;
@@ -81,7 +81,7 @@ int main() {
         }
     }
 
-    printf("%s\n", cases);
+    // printf("%s\n", cases);
     // now we filled up the cases array
 
     rewind(readfile); // put pointer back to start
@@ -105,7 +105,7 @@ int main() {
     fprintf(writefile, "\tcmpq\t$%ld", diffrent); // action - diffetent
     fputs(",%rdx\n", writefile);
 
-    char *defaultCase = ".DefaultCase:";
+    char *defaultCase = ".DefaultCase";
     fprintf(writefile, "ja  \t%s\n", defaultCase); // if !(SF ^ ZF) - go to default
 
     // next both lines are toghether
@@ -146,7 +146,7 @@ int main() {
         } else if (strstr(line, "break;") != NULL) { // jump to break case
             fprintf(writefile, "\tjmp %s\n", afterBreak);
         } else if (strstr(line, "default:") != NULL) {
-            fprintf(writefile, "%s\n", defaultCase); // default case
+            fprintf(writefile, "%s:\n", defaultCase); // default case
         } else {
             // got 2 elements with operator here
             i = 0;
@@ -206,6 +206,8 @@ int main() {
         fputs("\n", writefile);
     }
 
+    fputs("\t.quad ", writefile);
+    fprintf(writefile, "%s\n", defaultCase);
 
     fclose(readfile);
     fclose(writefile);
